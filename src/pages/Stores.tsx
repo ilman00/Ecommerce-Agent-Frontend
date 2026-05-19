@@ -66,7 +66,7 @@ export default function Stores() {
         ) : stores.length === 0 ? (
           <div className="p-8 rounded-2xl border border-white/10 bg-white/5 text-center">
             <p className="text-white/40 text-sm">No stores found.</p>
-            <button className="mt-4 px-5 py-2 bg-white text-black text-sm font-medium rounded-xl hover:bg-white/90 transition-colors">
+            <button onClick={() => setShowModal(true)} className="mt-4 px-5 py-2 bg-white text-black text-sm font-medium rounded-xl hover:bg-white/90 transition-colors">
               Connect a store
             </button>
           </div>
