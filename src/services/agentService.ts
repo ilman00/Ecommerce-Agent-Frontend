@@ -15,3 +15,8 @@ export async function runAgent(
 
   return res.data;
 }
+
+export async function getConversations(storeId: string) {
+  const res = await api.get(`/conversations/${storeId}`);
+  return res.data.conversations;
+}

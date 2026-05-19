@@ -34,8 +34,13 @@ export default function MessageRenderer({ content }: Props) {
           <ul className="list-disc list-inside text-sm text-white/50 space-y-1 my-2">{children}</ul>
         ),
         li: ({ children }) => <li>{children}</li>,
+        pre: ({ children }) => (
+          <pre className="bg-white/5 border border-white/10 rounded-xl p-3 overflow-x-auto my-2 whitespace-pre-wrap break-words">
+            {children}
+          </pre>
+        ),
         code: ({ children }) => (
-          <code className="text-xs bg-white/10 text-white/70 px-1.5 py-0.5 rounded">{children}</code>
+          <code className="text-xs bg-white/10 text-white/70 px-1.5 py-0.5 rounded whitespace-pre-wrap break-words">{children}</code>
         ),
       }}
     >

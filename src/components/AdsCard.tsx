@@ -14,7 +14,7 @@ export default function AdsCard({ ads }: { ads: AdCopy }) {
         </div>
         <div className="p-4 bg-white/5 rounded-xl border border-white/5">
           <p className="text-xs text-white/30 mb-1 font-medium">Body</p>
-          <p className="text-sm text-white/60 leading-relaxed">{ads.body}</p>
+          <p className="text-sm text-white/60 leading-relaxed break-words">{ads.body}</p>
         </div>
         <div className="p-4 bg-white/5 rounded-xl border border-white/5">
           <p className="text-xs text-white/30 mb-1 font-medium">Call to Action</p>
