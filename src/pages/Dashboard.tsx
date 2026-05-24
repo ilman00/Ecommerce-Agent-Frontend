@@ -156,7 +156,6 @@ export default function Dashboard() {
 
           <div className="flex flex-col gap-1 mt-2">
             {threads.map(thread => {
-              console.log("rendering thread:", thread)
               return (
               <div
                 key={thread._id}
@@ -219,7 +218,7 @@ export default function Dashboard() {
                 <div key={i}>
                   {msg.role === 'user' ? (
                     <div className="flex justify-end">
-                      <div className="bg-white/10 text-white text-sm px-4 py-2 rounded-2xl max-w-xs">
+                      <div className="bg-white/10 text-white text-sm px-4 py-2 rounded-2xl max-w-xs break-words">
                         {msg.text}
                       </div>
                     </div>
