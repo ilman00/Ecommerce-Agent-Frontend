@@ -1,7 +1,7 @@
 import api from "./api";
 import type { Store } from "../types";
 import { API_BASE_URL } from "../config";
-import { authStore } from "../store/authStore";
+import { useAuthStore } from "../store/authStore";
 
 interface StoresResponse {
   success: boolean;
@@ -14,6 +14,6 @@ export async function getStores(): Promise<Store[]> {
 }
 
 export function connectShopify(shop: string): void {
-  const token = authStore.getAccessToken();
+  const token = useAuthStore.getState().getAccessToken();
   window.location.href = `${API_BASE_URL}/stores/shopify/connect?shop=${shop}&token=${token}`;
 }

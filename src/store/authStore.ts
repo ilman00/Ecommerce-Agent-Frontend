@@ -1,29 +1,61 @@
-import { create } from "zustand";
+import { create } from 'zustand';
 
-interface AuthState {
-  accessToken: string | null;
-  isAuthenticated: boolean;
-  setAccessToken: (token: string) => void;
-  clearAuth: () => void;
+export interface User {
+  userId: string;
+  email: string;
+  role: 'user' | 'admin';
 }
 
-export const useAuthStore = create<AuthState>((set) => ({
+interface AuthState {
+  // State
+  user: User | null;
+  accessToken: string | null;
+  accessTokenExpiresAt: number | null;
+  isAuthenticated: boolean;
+
+  // Actions
+  setAuth: (user: User, accessToken: string, expiresIn: number) => void;
+  clearAuth: () => void;
+
+  // Getters
+  isTokenExpired: () => boolean;
+  getAccessToken: () => string | null;
+}
+
+export const useAuthStore = create<AuthState>((set, get) => ({
+  user: null,
   accessToken: null,
+  accessTokenExpiresAt: null,
   isAuthenticated: false,
 
-  setAccessToken: (token) =>
-    set({ accessToken: token, isAuthenticated: true }),
+  setAuth: (user, accessToken, expiresIn) => {
+    const expiresAt = Date.now() + expiresIn * 1000;
+    set({
+      user,
+      accessToken,
+      accessTokenExpiresAt: expiresAt,
+      isAuthenticated: true,
+    });
+  },
 
   clearAuth: () => {
-    localStorage.removeItem("refreshToken");
-    set({ accessToken: null, isAuthenticated: false });
+    set({
+      user: null,
+      accessToken: null,
+      accessTokenExpiresAt: null,
+      isAuthenticated: false,
+    });
+  },
+
+  isTokenExpired: () => {
+    const { accessTokenExpiresAt } = get();
+    if (!accessTokenExpiresAt) return true;
+    return Date.now() > accessTokenExpiresAt - 60 * 1000;
+  },
+
+  getAccessToken: () => {
+    const state = get();
+    if (state.isTokenExpired()) return null;
+    return state.accessToken;
   },
 }));
-
-// Keep this for non-component files (api.ts, authService.ts)
-export const authStore = {
-  getAccessToken: () => useAuthStore.getState().accessToken,
-  setAccessToken: (token: string) => useAuthStore.getState().setAccessToken(token),
-  clearAuth: () => useAuthStore.getState().clearAuth(),
-  isAuthenticated: () => useAuthStore.getState().isAuthenticated,
-};
