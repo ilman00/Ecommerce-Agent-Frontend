@@ -18,7 +18,7 @@ const RegisterForm = () => {
     }
     setMatchError(null);
     const success = await handleRegister({ email, password });
-    if (success) navigate("/dashboard");
+    if (success) navigate("/stores");
   };
 
   return (
