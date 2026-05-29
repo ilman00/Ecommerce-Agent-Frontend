@@ -62,7 +62,7 @@ export default function Navbar() {
       <div className="flex items-center gap-3">
       
         <button
-          onClick={() => navigate("/register")}
+          onClick={() => navigate("/login")}
           className="text-sm bg-white text-black px-4 py-1.5 rounded-lg hover:bg-white/90 transition-colors font-medium "
         >
           Sign in

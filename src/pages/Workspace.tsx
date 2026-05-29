@@ -1,5 +1,6 @@
 import { useRef, useState, useEffect } from "react";
-import Navbar from "../components/Navbar";
+// import Navbar from "../components/Navbar";
+import TopBar from "../components/dashboard/TopBar";
 import ImageUploader from "../components/ImageUploader";
 import PromptInput from "../components/PromptInput";
 import ListingCard from "../components/ListingCard";
@@ -33,6 +34,7 @@ export default function Dashboard() {
   const uploaderRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
   const { storeId } = useParams<{ storeId: string }>();
+  
 
   useEffect(() => {
     async function loadThreads() {
@@ -115,7 +117,12 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] flex flex-col">
-      <Navbar />
+      <TopBar
+          title="Dashboard"
+          description="Overview of your store performance"
+          action={{ label: "+ New Product", onClick: () => {} }}
+          onMenuClick={() => setSidebarOpen(true)}
+        />
 
       <div className="flex flex-1 overflow-hidden relative">
 

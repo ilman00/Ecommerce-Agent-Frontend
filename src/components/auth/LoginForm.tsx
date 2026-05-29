@@ -11,7 +11,7 @@ const LoginForm = () => {
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const success = await handleLogin({ email, password });
-    if (success) navigate("/stores");
+    if (success) navigate("/dashboard");
   };
 
   return (

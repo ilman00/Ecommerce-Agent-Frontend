@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import Navbar from "../components/Navbar";
-import Sidebar from "../components/Sidebar";
+// import Navbar from "../components/Navbar";
+import Sidebar from "../components/dashboard/Sidebar";
+import TopBar from "../components/dashboard/TopBar";
 
 interface DashboardStats {
   totalOrders: number;
@@ -29,6 +30,7 @@ export default function Dashboard() {
   });
   const [recentActivity, setRecentActivity] = useState<RecentItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     // TODO: Replace with real API calls
@@ -144,7 +146,11 @@ export default function Dashboard() {
   if (loading) {
     return (
       <div className="min-h-screen bg-[#0a0a0a] flex flex-col">
-        <Navbar />
+        <TopBar
+          title="Dashboard"
+          description="Overview of your store performance"
+          action={{ label: "+ New Product", onClick: () => { } }}
+          onMenuClick={() => setSidebarOpen(true)} />
         <div className="flex-1 flex items-center justify-center">
           <div className="w-8 h-8 rounded-full border-2 border-white/20 border-t-white animate-spin" />
         </div>
@@ -154,112 +160,118 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] flex flex-col">
-      <Navbar />
+      <TopBar title="Dashboard"
+        description="Overview of your store performance"
+        action={{ label: "+ New Product", onClick: () => { } }}
+        onMenuClick={() => setSidebarOpen(true)} />
 
       <div className="flex-1 flex overflow-hidden">
         {/* Sidebar */}
-        <Sidebar activePage="dashboard" />
+        <Sidebar
+          activePage="dashboard"
+          isOpen={sidebarOpen}
+          onClose={() => setSidebarOpen(false)}
+        />
 
         {/* Main Content */}
         <main className="flex-1 overflow-y-auto">
           <div className="max-w-6xl mx-auto px-4 py-8 md:px-8">
-          {/* Header */}
-          <div className="mb-8">
-            <h1 className="text-3xl md:text-4xl font-semibold text-white mb-2">
-              Dashboard
-            </h1>
-            <p className="text-white/40">Welcome back! Here's your store overview.</p>
-          </div>
+            {/* Header */}
+            <div className="mb-8">
+              <h1 className="text-3xl md:text-4xl font-semibold text-white mb-2">
+                Dashboard
+              </h1>
+              <p className="text-white/40">Welcome back! Here's your store overview.</p>
+            </div>
 
-          {/* Stats Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-            {statCards.map((card) => (
-              <div
-                key={card.label}
-                className={`bg-gradient-to-br ${card.color} border border-white/10 rounded-2xl p-6 hover:border-white/20 transition-colors`}
-              >
-                <div className="flex items-start justify-between mb-4">
-                  <span className="text-2xl">{card.icon}</span>
-                </div>
-                <p className="text-white/40 text-sm mb-1">{card.label}</p>
-                <p className="text-2xl font-semibold text-white">{card.value}</p>
-              </div>
-            ))}
-          </div>
-
-          {/* Navigation Tiles */}
-          <div className="mb-8">
-            <h2 className="text-lg font-semibold text-white mb-4">Quick Actions</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {navigationTiles.map((tile) => (
-                <button
-                  key={tile.title}
-                  onClick={tile.action}
-                  className={`bg-gradient-to-br ${tile.bgColor} border border-white/10 rounded-2xl p-6 hover:border-white/30 hover:bg-gradient-to-br hover:from-white/10 transition-all text-left group`}
+            {/* Stats Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+              {statCards.map((card) => (
+                <div
+                  key={card.label}
+                  className={`bg-gradient-to-br ${card.color} border border-white/10 rounded-2xl p-6 hover:border-white/20 transition-colors`}
                 >
                   <div className="flex items-start justify-between mb-4">
-                    <span className="text-3xl">{tile.icon}</span>
-                    {tile.badge && (
-                      <span className="bg-red-500/80 text-white text-xs font-semibold px-2 py-1 rounded-full">
-                        {tile.badge}
-                      </span>
-                    )}
+                    <span className="text-2xl">{card.icon}</span>
                   </div>
-                  <h3 className="text-lg font-semibold text-white mb-1 group-hover:text-white transition-colors">
-                    {tile.title}
-                  </h3>
-                  <p className="text-sm text-white/40">{tile.description}</p>
-                </button>
+                  <p className="text-white/40 text-sm mb-1">{card.label}</p>
+                  <p className="text-2xl font-semibold text-white">{card.value}</p>
+                </div>
               ))}
             </div>
-          </div>
 
-          {/* Recent Activity */}
-          <div className="mb-8">
-            <h2 className="text-lg font-semibold text-white mb-4">Recent Activity</h2>
-            <div className="bg-white/5 border border-white/10 rounded-2xl overflow-hidden">
-              {recentActivity.length === 0 ? (
-                <div className="p-6 text-center text-white/40 text-sm">
-                  No recent activity
-                </div>
-              ) : (
-                <div className="divide-y divide-white/10">
-                  {recentActivity.map((item) => (
-                    <div
-                      key={item.id}
-                      className="px-6 py-4 hover:bg-white/5 transition-colors flex items-center justify-between"
-                    >
-                      <div className="flex-1">
-                        <div className="flex items-center gap-3">
-                          <span className="text-lg">
-                            {item.type === "conversation" ? "💬" : "📦"}
-                          </span>
-                          <div>
-                            <p className="text-white text-sm font-medium">{item.title}</p>
-                            <p className="text-white/30 text-xs">{item.date}</p>
-                          </div>
-                        </div>
-                      </div>
-                      {item.status && (
-                        <span
-                          className={`text-xs font-semibold px-3 py-1 rounded-full ${
-                            item.status === "completed"
-                              ? "bg-green-500/20 text-green-400"
-                              : item.status === "flagged"
-                              ? "bg-red-500/20 text-red-400"
-                              : "bg-yellow-500/20 text-yellow-400"
-                          }`}
-                        >
-                          {item.status.charAt(0).toUpperCase() + item.status.slice(1)}
+            {/* Navigation Tiles */}
+            <div className="mb-8">
+              <h2 className="text-lg font-semibold text-white mb-4">Quick Actions</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {navigationTiles.map((tile) => (
+                  <button
+                    key={tile.title}
+                    onClick={tile.action}
+                    className={`bg-gradient-to-br ${tile.bgColor} border border-white/10 rounded-2xl p-6 hover:border-white/30 hover:bg-gradient-to-br hover:from-white/10 transition-all text-left group`}
+                  >
+                    <div className="flex items-start justify-between mb-4">
+                      <span className="text-3xl">{tile.icon}</span>
+                      {tile.badge && (
+                        <span className="bg-red-500/80 text-white text-xs font-semibold px-2 py-1 rounded-full">
+                          {tile.badge}
                         </span>
                       )}
                     </div>
-                  ))}
-                </div>
-              )}
+                    <h3 className="text-lg font-semibold text-white mb-1 group-hover:text-white transition-colors">
+                      {tile.title}
+                    </h3>
+                    <p className="text-sm text-white/40">{tile.description}</p>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Recent Activity */}
+            <div className="mb-8">
+              <h2 className="text-lg font-semibold text-white mb-4">Recent Activity</h2>
+              <div className="bg-white/5 border border-white/10 rounded-2xl overflow-hidden">
+                {recentActivity.length === 0 ? (
+                  <div className="p-6 text-center text-white/40 text-sm">
+                    No recent activity
+                  </div>
+                ) : (
+                  <div className="divide-y divide-white/10">
+                    {recentActivity.map((item) => (
+                      <div
+                        key={item.id}
+                        className="px-6 py-4 hover:bg-white/5 transition-colors flex items-center justify-between"
+                      >
+                        <div className="flex-1">
+                          <div className="flex items-center gap-3">
+                            <span className="text-lg">
+                              {item.type === "conversation" ? "💬" : "📦"}
+                            </span>
+                            <div>
+                              <p className="text-white text-sm font-medium">{item.title}</p>
+                              <p className="text-white/30 text-xs">{item.date}</p>
+                            </div>
+                          </div>
+                        </div>
+                        {item.status && (
+                          <span
+                            className={`text-xs font-semibold px-3 py-1 rounded-full ${item.status === "completed"
+                              ? "bg-green-500/20 text-green-400"
+                              : item.status === "flagged"
+                                ? "bg-red-500/20 text-red-400"
+                                : "bg-yellow-500/20 text-yellow-400"
+                              }`}
+                          >
+                            {item.status.charAt(0).toUpperCase() + item.status.slice(1)}
+                          </span>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
-        </div>
         </main>
       </div>
     </div>
